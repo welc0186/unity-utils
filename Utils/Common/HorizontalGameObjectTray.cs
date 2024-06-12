@@ -29,6 +29,15 @@ public class HorizontalGameObjectTray : MonoBehaviour
         objectEndMove += () => _movingObject = null;
     }
 
+    public void Clear()
+    {
+        foreach(var slot in _traySlots)
+        {
+            Destroy(slot.gameObject);
+        }
+        _traySlots = new List<GameObject>();
+    }
+
     private void AddSlot(GameObject childObject)
     {
         var newSlot = new GameObject("TraySlot", typeof(RectTransform));
