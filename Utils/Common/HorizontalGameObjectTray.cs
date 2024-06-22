@@ -77,6 +77,29 @@ public class HorizontalGameObjectTray : MonoBehaviour
         }
     }
 
+    public void RemoveEmptySlots()
+    {
+        var i = 0;
+        while (true)
+        {
+            if (i >= _traySlots.Count)
+                break;
+            if (_traySlots[i].transform.childCount < 1)
+            {
+                RemoveSlot(_traySlots[i]);
+                continue;
+            }
+            i++;
+        }
+    }
+
+    public void RemoveSlot(GameObject traySlot)
+    {
+        if(!_traySlots.Contains(traySlot))
+            return;
+        _traySlots.Remove(traySlot);
+        Destroy(traySlot);
+    }
 
     void Swap(int index)
     {
