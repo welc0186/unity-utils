@@ -9,13 +9,15 @@ public class CoroutineTimer
 {
 
     public Action Timeout;
+    Coroutine _countdownCoroutine;
 
 	private CoroutineTimer(){}
 
     public static CoroutineTimer Init(float seconds = 1)
     {
         var ret = new CoroutineTimer();
-        Coroutines.StartCoroutine(ret.CountDown(seconds));
+        var coroutine = Coroutines.StartCoroutine(ret.CountDown(seconds));
+        ret._countdownCoroutine = coroutine;
         return ret;
     }
 
@@ -25,8 +27,15 @@ public class CoroutineTimer
             return Init(seconds);
 
         var ret = new CoroutineTimer();
-        Coroutines.StartCoroutine(ret.CountDownRealtime(seconds));
+        var coroutine = Coroutines.StartCoroutine(ret.CountDownRealtime(seconds));
+        ret._countdownCoroutine = coroutine;
         return ret;
+    }
+
+    public void Stop()
+    {
+        if (_countdownCoroutine != null)
+            Coroutines.StopCoroutine(_countdownCoroutine);
     }
 
     IEnumerator CountDownRealtime(float seconds)
