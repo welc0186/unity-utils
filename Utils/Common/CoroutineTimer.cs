@@ -19,6 +19,22 @@ public class CoroutineTimer
         return ret;
     }
 
+    public static CoroutineTimer Init(float seconds, bool workWhilePaused)
+    {
+        if(!workWhilePaused)
+            return Init(seconds);
+
+        var ret = new CoroutineTimer();
+        Coroutines.StartCoroutine(ret.CountDownRealtime(seconds));
+        return ret;
+    }
+
+    IEnumerator CountDownRealtime(float seconds)
+    {
+        yield return new WaitForSecondsRealtime(seconds);
+        Timeout?.Invoke();
+    }
+
     IEnumerator CountDown(float seconds)
     {
         yield return new WaitForSeconds(seconds);

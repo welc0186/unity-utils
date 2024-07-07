@@ -21,16 +21,20 @@ public static class Coroutines
         if (s_CoroutineRunner == null)
         {
             s_CoroutineRunner = new GameObject("Coroutine runner", typeof(CoroutineRunner)).GetComponent<CoroutineRunner>();
+            s_CoroutineRunner.GetComponent<CoroutineRunner>().MyCoroutines = new List<Coroutine>();
         }
 
-        return s_CoroutineRunner.StartCoroutine(coroutine);
+        var ret = s_CoroutineRunner.StartCoroutine(coroutine);
+        s_CoroutineRunner.GetComponent<CoroutineRunner>().MyCoroutines.Add(ret);
+        return ret;
     }
 
     public static void StopCoroutine(Coroutine coroutine)
     {
-        if (s_CoroutineRunner != null)
+        if (s_CoroutineRunner != null && coroutine != null)
         {
             s_CoroutineRunner.StopCoroutine(coroutine);
+            coroutine = null;
         }
     }
 
@@ -46,6 +50,17 @@ public static class Coroutines
 
 public class CoroutineRunner : MonoBehaviour
 {
+
+    public List<Coroutine> MyCoroutines;
+    
+    void OnDestroy()
+    {
+        foreach(var coroutine in MyCoroutines)
+        {
+            if (coroutine != null)
+                Coroutines.StopCoroutine(coroutine);
+        }
+    }
 
 }
 }
